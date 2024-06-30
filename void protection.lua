@@ -2,6 +2,7 @@
 local fallTimeThreshold = 1 -- tempo em segundos para ativar a flutuação
 local isFalling = false
 local fallStartTime = 0
+local toggleActivated = false -- variável para verificar se o toggle está ativado
 
 -- Função para adicionar BodyVelocity ao personagem para flutuação
 local function floatCharacter(character)
@@ -40,13 +41,19 @@ local function monitorFalling(character)
         end
     end)
 
-    -- Checa continuamente se o personagem está caindo por mais de 1 segundo
-    while true do
+    -- Função para ativar a flutuação se o personagem estiver caindo por mais de 1 segundo
+    local function checkAndFloat()
         if isFalling and (tick() - fallStartTime) > fallTimeThreshold then
-            -- Ativa a flutuação se o personagem estiver caindo por mais de 1 segundo
             floatCharacter(character)
         end
-        wait(0.1) -- Ajuste o intervalo conforme necessário para otimização
+    end
+
+    -- Monitora continuamente enquanto o toggle estiver ativado
+    while true do
+        if toggleActivated then
+            checkAndFloat()
+        end
+        wait(5) -- Verifica a cada 5 segundos
     end
 end
 
@@ -59,5 +66,6 @@ monitorFalling(character)
 
 -- Garante que a monitorização continue quando o personagem respawnar
 player.CharacterAdded:Connect(function(newCharacter)
+    character = newCharacter
     monitorFalling(newCharacter)
 end)
