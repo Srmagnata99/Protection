@@ -40,13 +40,13 @@ local function monitorFalling(character)
         end
     end)
 
-    -- Loop para verificar o estado de queda a cada 5 segundos
+    -- Checa continuamente se o personagem está caindo por mais de 1 segundo
     while true do
         if isFalling and (tick() - fallStartTime) > fallTimeThreshold then
             -- Ativa a flutuação se o personagem estiver caindo por mais de 1 segundo
             floatCharacter(character)
         end
-        wait(5) -- Aguarda 5 segundos antes de verificar novamente
+        wait(0.1) -- Ajuste o intervalo conforme necessário para otimização
     end
 end
 
